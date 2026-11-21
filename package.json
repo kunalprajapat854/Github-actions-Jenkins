@@ -1,0 +1,13 @@
+{
+  "name": "hello-jenkins",
+  "version": "1.0.0",
+  "description": "Simple Node.js application for CI/CD",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "node test/app.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
