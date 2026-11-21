@@ -1,15 +1,34 @@
-name : Node js CI pipeline
-    on : [main]
-        jobs:
-            build:
-                runs-on: ubuntu-latest
-                    steps:
-                        - uses: actions/checkout@v4
-                        - name: Use Node.js
-                            uses: actions/setup-node@v4
-                            with:
-                                node-version: '22'
-                                cache: 'npm'
-                        - run: npm ci
-                        - run: npm run build
-                        - run: npm test
+name: Node js CI pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run Tests
+        run: npm test
+
+  # You can add a deploy job here later
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Deploy
+  #       run: echo "Deploying..."
