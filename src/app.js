@@ -1,19 +1,32 @@
-const http = require('node:http');
 
-const PORT = process.env.PORT || 3000;
+const http = require("http");
 
-const requestHandler = (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-  res.end('Hello Jenkins');
-};
-
-const server = http.createServer(requestHandler);
-
-if (require.main === module) {
-  server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+function getMessage() {
+    return "Hello from Jenkins CI/CD!";
 }
 
-module.exports = { server, requestHandler };
+const server = http.createServer((req, res) => {
+    if (req.url === "/health") {
+        res.writeHead(200, {
+            "Content-Type": "application/json"
+        });
 
+        return res.end(JSON.stringify({
+            status: "UP"
+        }));
+    }
+
+    res.writeHead(200, {
+        "Content-Type": "text/plain"
+    });
+
+    res.end(getMessage());
+});
+
+if (require.main === module) {
+    server.listen(3000, "0.0.0.0", () => {
+        console.log("Application running on port 3000");
+    });
+}
+
+module.exports = { getMessage };
