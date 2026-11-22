@@ -1,23 +1,32 @@
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const { requestHandler } = require('../src/app');
 
-test('returns Hello Jenkins', () => {
-  let responseData = '';
-  const req = {};
-  const res = {
-    writeHead(status, headers) {
-      this.statusCode = status;
-      this.headers = headers;
-    },
-    end(data) {
-      responseData = data;
+const http = require("http");
+
+function getMessage() {
+    return "Hello from Jenkins CI/CD!";
+}
+
+const server = http.createServer((req, res) => {
+    if (req.url === "/health") {
+        res.writeHead(200, {
+            "Content-Type": "application/json"
+        });
+
+        return res.end(JSON.stringify({
+            status: "UP"
+        }));
     }
-  };
 
-  requestHandler(req, res);
+    res.writeHead(200, {
+        "Content-Type": "text/plain"
+    });
 
-  assert.equal(res.statusCode, 200);
-  assert.equal(responseData, 'Hello Jenkins');
+    res.end(getMessage());
 });
 
+if (require.main === module) {
+    server.listen(3000, "0.0.0.0", () => {
+        console.log("Application running on port 3000");
+    });
+}
+
+module.exports = { getMessage };
